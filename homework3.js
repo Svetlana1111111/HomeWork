@@ -1,4 +1,4 @@
-function row(x, y) {
+function pow(x, y) {
     let result = 1;
     for (let i = 0; i < y; i++) {
         result *= x;
@@ -8,7 +8,7 @@ function row(x, y) {
 
 console.log(row(2, 3)); // перший варіант
 
-function row2(x, y) {
+function pow2(x, y) {
     let result = 1;
     let i = 0;
 
