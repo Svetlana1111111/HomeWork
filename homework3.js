@@ -6,7 +6,7 @@ function pow(x, y) {
     return result;
 }
 
-console.log(row(2, 3)); // перший варіант
+console.log(pow(2, 3)); // перший варіант
 
 function pow2(x, y) {
     let result = 1;
@@ -19,4 +19,4 @@ function pow2(x, y) {
     return result;
 }
 
-console.log(row2(2, 3)); // другий варіант 
+console.log(pow2(2, 3)); // другий варіант 
