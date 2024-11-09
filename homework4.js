@@ -3,7 +3,8 @@ function checkProbabilityTheory(count) {
     let totalCount = 0;
     let even = 0;
     let odd = 0;
-    let percentEvenToOdd = 0;
+    let percentEven = 0;
+    let percentOdd = 0;
 
     for (let i = 0; i < count; i++) {
         const min = 100;
@@ -20,15 +21,16 @@ function checkProbabilityTheory(count) {
         }
 
         totalCount = even + odd;
-        percentEvenToOdd = ((even / odd) * 100).toFixed(2);
+        percentEven = ((even / totalCount) * 100).toFixed(2);
+        percentOdd = ((odd / totalCount) * 100).toFixed(2);
       
     }
     return {
         totalCount: totalCount, 
         even: even,
         odd: odd,
-        percentEvenToOdd: percentEvenToOdd + '%'
+        percentEven: percentEven + '%',
+        percentOdd: percentOdd + '%'
     }
 }
-
 console.log(checkProbabilityTheory(20))
