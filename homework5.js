@@ -14,5 +14,5 @@ const apartment = {
 
 apartment.getinfo();
 apartment.condition = "new";
-console.log("---------------")
+console.log("---------------");
 apartment.getinfo();
