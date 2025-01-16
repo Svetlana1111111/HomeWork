@@ -1,0 +1,1274 @@
+{
+	"info": {
+		"_postman_id": "8a6ea80a-6a2b-400f-9fd2-7456b20f2967",
+		"name": "Yatsenko_Svitlana_QA auto",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5708374"
+	},
+	"item": [
+		{
+			"name": "passwordСhecks",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"function generateRandomName() {",
+							"    // Генеруємо довжину імені від 2 до 20 символів",
+							"    const minLength = 2;",
+							"    const maxLength = 20;",
+							"    const length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;",
+							"",
+							"    let name = '';",
+							"    const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'; ",
+							"",
+							"    for (let i = 0; i < length; i++) {",
+							"        const randomIndex = Math.floor(Math.random() * characters.length);",
+							"        name += characters[randomIndex];",
+							"    }",
+							"    // Видаляємо пробіли ",
+							"    return name.trim();",
+							"}",
+							"pm.collectionVariables.set('firstName', generateRandomName());",
+							"",
+							"function generateRandomLastName() {",
+							"    // Генеруємо довжину прізвища в межах від 2 до 20 символів",
+							"    const minLength = 2;",
+							"    const maxLength = 20;",
+							"    const length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;",
+							"    ",
+							"    let name = '';",
+							"    const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'; ",
+							"",
+							"    for (let i = 0; i < length; i++) {",
+							"        const randomIndex = Math.floor(Math.random() * characters.length);",
+							"        name += characters[randomIndex];",
+							"    }",
+							"    return name.trim(); // Видаляємо пробіли ",
+							"}",
+							"pm.collectionVariables.set('lastName', generateRandomLastName());",
+							"",
+							"function generateEmail() {",
+							"    const localPartLength = Math.floor(Math.random() * 64) + 1; // Випадкова довжина від 1 до 64",
+							"    const domainPart = \"example.com\"; // Фіксований домен",
+							"    const chars = \"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\";",
+							"",
+							"    let localPart = \"\";",
+							"",
+							"    for (let i = 0; i < localPartLength; i++) {",
+							"        localPart += chars[Math.floor(Math.random() * chars.length)];",
+							"    }",
+							"    return `${localPart}@${domainPart}`;",
+							"}",
+							"pm.collectionVariables.set('email', generateEmail());",
+							"",
+							"",
+							"const testPassword = [",
+							"    {",
+							"        name: \"shortPassword\",",
+							"        testData: \"Abcd123\",",
+							"        expectedResult: {",
+							"            statusCode: 400,",
+							"            message: \"Password has to be from 8 to 15 characters long and contain at least one integer, one capital, and one small letter\"",
+							"        }",
+							"    },",
+							"    {",
+							"        name: \"longPassword\",",
+							"        testData: \"AbcdefghiJklmnop\",",
+							"        expectedResult: {",
+							"            statusCode: 400,",
+							"            message: \"Password has to be from 8 to 15 characters long and contain at least one integer, one capital, and one small letter\"",
+							"        }",
+							"    },",
+							"    {",
+							"        name: \"withoutLetters\",",
+							"        testData: \"123456789\",",
+							"        expectedResult: {",
+							"            statusCode: 400,",
+							"            message: \"Password has to be from 8 to 15 characters long and contain at least one integer, one capital, and one small letter\"",
+							"        }",
+							"    },",
+							"    {",
+							"        name: \"withoutNumbers\",",
+							"        testData: \"Abcdefghi\",",
+							"        expectedResult: {",
+							"            statusCode: 400,",
+							"            message: \"Password has to be from 8 to 15 characters long and contain at least one integer, one capital, and one small letter\"",
+							"        }",
+							"    },",
+							"    {",
+							"        name: \"withoutUpperCase\",",
+							"        testData: \"abc12345\",",
+							"        expectedResult: {",
+							"            statusCode: 400,",
+							"            message: \"Password has to be from 8 to 15 characters long and contain at least one integer, one capital, and one small letter\"",
+							"        }",
+							"    },",
+							"    {",
+							"        name: \"withoutLoverCase\",",
+							"        testData: \"ABC12345\",",
+							"        expectedResult: {",
+							"            statusCode: 400,",
+							"            message: \"Password has to be from 8 to 15 characters long and contain at least one integer, one capital, and one small letter\"",
+							"        }",
+							"    },",
+							"    {",
+							"        name: \"Empty\",",
+							"        testData: \"\",",
+							"        expectedResult: {",
+							"            statusCode: 400,",
+							"            message: '\"password\" is not allowed to be empty'",
+							"        }",
+							"    },",
+							"    {",
+							"        name: \"withEmptySpace\",",
+							"        testData: \"Abc 123!\",",
+							"        expectedResult: {",
+							"            statusCode: 400,",
+							"            message: \"Password has to be from 8 to 15 characters long and contain at least one integer, one capital, and one small letter\"",
+							"        }",
+							"    },",
+							"    {",
+							"        name: \"withEmptySpaceAtTheEnd\",",
+							"        testData: \"Abc123!   \",",
+							"        expectedResult: {",
+							"            statusCode: 400,",
+							"            message: \"Password has to be from 8 to 15 characters long and contain at least one integer, one capital, and one small letter\"",
+							"        }",
+							"    },",
+							"    {",
+							"        name: \"onlySpecialCharacters\",",
+							"        testData: \"!@#$%^&*\",",
+							"        expectedResult: {",
+							"            statusCode: 400,",
+							"            message: \"Password has to be from 8 to 15 characters long and contain at least one integer, one capital, and one small letter\"",
+							"        }",
+							"    }",
+							"];",
+							"",
+							"let currentIndex = pm.collectionVariables.get('currentIndex') || 0;",
+							"pm.collectionVariables.set(\"desc\", testPassword[currentIndex]);",
+							"",
+							"console.log(currentIndex)",
+							"if (currentIndex < testPassword.length -1) {",
+							"        pm.collectionVariables.set(\"checkPassword\", testPassword[currentIndex].testData);",
+							"        pm.collectionVariables.set('currentIndex', Number(currentIndex) + 1) ;",
+							"}     ",
+							"else{",
+							"        pm.collectionVariables.unset(\"checkPassword\"),",
+							"        pm.collectionVariables.unset(\"currentIndex\")",
+							"        pm.execution.setNextRequest(null);",
+							"};",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.collectionVariables.get('currentIndex')) {",
+							"    pm.execution.setNextRequest('passwordСhecks');",
+							"} else {",
+							"    pm.execution.setNextRequest('Signup');",
+							"}",
+							"",
+							"const response = pm.response.json();",
+							"let data = pm.collectionVariables.get(\"desc\");",
+							"",
+							"pm.test(`${data.name} - Check password validation`, function(){",
+							"        pm.expect(response.message).to.be.eql(data.expectedResult.message);",
+							"        pm.response.to.have.status(data.expectedResult.statusCode);",
+							"});",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"{{firstName}}\",\n  \"lastName\": \"{{lastName}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{checkPassword}}\",\n  \"repeatPassword\": \"{{checkPassword}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/signup",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Signup",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"function generateRandomName() {",
+							"    // Генеруємо довжину імені в межах від 2 до 20 символів",
+							"    const minLength = 2;",
+							"    const maxLength = 20;",
+							"    const length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;",
+							"",
+							"    let name = '';",
+							"    const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'; ",
+							"",
+							"    for (let i = 0; i < length; i++) {",
+							"        const randomIndex = Math.floor(Math.random() * characters.length);",
+							"        name += characters[randomIndex];",
+							"    }",
+							"    ",
+							"    return name.trim();",
+							"}",
+							"pm.collectionVariables.set('firstName', generateRandomName());",
+							"",
+							"function generateRandomLastName() {",
+							"    // Генеруємо довжину прізвища в межах від 2 до 20 символів",
+							"    const minLength = 2;",
+							"    const maxLength = 20;",
+							"    const length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;",
+							"    ",
+							"    let name = '';",
+							"    const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'; ",
+							"",
+							"    for (let i = 0; i < length; i++) {",
+							"        const randomIndex = Math.floor(Math.random() * characters.length);",
+							"        name += characters[randomIndex];",
+							"    }",
+							"    return name.trim(); // Видаляємо пробіли ",
+							"}",
+							"pm.collectionVariables.set('lastName', generateRandomLastName());",
+							"",
+							"function generateEmail() {",
+							"    const localPartLength = Math.floor(Math.random() * 64) + 1; // Випадкова довжина від 1 до 64",
+							"    const domainPart = \"example.com\"; // Фіксований домен",
+							"    const chars = \"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\";",
+							"",
+							"    let localPart = \"\";",
+							"",
+							"    for (let i = 0; i < localPartLength; i++) {",
+							"        localPart += chars[Math.floor(Math.random() * chars.length)];",
+							"    }",
+							"    return `${localPart}@${domainPart}`;",
+							"}",
+							"pm.collectionVariables.set('email', generateEmail());",
+							"",
+							"function generatePassword(minLength = 8, maxLength = 15) {",
+							"    const length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;",
+							"",
+							"    const lowerCaseLetters = 'abcdefghijklmnopqrstuvwxyz';",
+							"    const upperCaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';",
+							"    const digits = '0123456789';",
+							"    const allCharacters = lowerCaseLetters + upperCaseLetters + digits;",
+							"",
+							"    let password = '';",
+							"",
+							"    password += lowerCaseLetters[Math.floor(Math.random() * lowerCaseLetters.length)];",
+							"    password += upperCaseLetters[Math.floor(Math.random() * upperCaseLetters.length)];",
+							"    password += digits[Math.floor(Math.random() * digits.length)];",
+							"",
+							"    // Додаємо випадкові символи, щоб довжина пароля відповідала",
+							"    for (let i = password.length; i < length; i++) {",
+							"        password += allCharacters[Math.floor(Math.random() * allCharacters.length)];",
+							"    }",
+							"",
+							"    // Перемішуємо символи пароля",
+							"    password = password.split('').sort(() => Math.random() - 0.5).join('');",
+							"    return password;",
+							"}",
+							"",
+							"pm.collectionVariables.set('password', generatePassword());",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();",
+							"var userId = response.data.userId;",
+							"pm.collectionVariables.set('userId', response.data.userId);",
+							"",
+							"const Ajv = require('ajv');",
+							"const ajv = new Ajv();",
+							"",
+							"const schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"    \"status\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"data\": {",
+							"      \"type\": \"object\",",
+							"      \"properties\": {",
+							"        \"userId\": {",
+							"          \"type\": \"integer\"",
+							"        },",
+							"        \"photoFilename\": {",
+							"          \"type\": \"string\"",
+							"        },",
+							"        \"distanceUnits\": {",
+							"          \"type\": \"string\"",
+							"        },",
+							"        \"currency\": {",
+							"          \"type\": \"string\"",
+							"        }",
+							"      },",
+							"      \"required\": [",
+							"        \"userId\",",
+							"        \"photoFilename\",",
+							"        \"distanceUnits\",",
+							"        \"currency\"",
+							"      ]",
+							"    }",
+							"  },",
+							"  \"required\": [",
+							"    \"status\",",
+							"    \"data\"",
+							"  ]",
+							"}",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"        pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Email is valid\", function () {",
+							"    const email = pm.collectionVariables.get(\"email\");",
+							"    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/;",
+							"    const isValidEmail = emailPattern.test(email);",
+							"    pm.expect(isValidEmail).to.be.true;",
+							"}); // email має стандартний валідний формат пошти",
+							"",
+							"pm.test('Schema is valid', function () {",
+							"    const validate = ajv.compile(schema);",
+							"    const valid = validate(pm.response.json());",
+							"    pm.expect(valid).to.be.true;",
+							"}); //Створення користувача повино мати перевірку json schema",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"{{firstName}}\",\n  \"lastName\": \"{{lastName}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"repeatPassword\": \"{{password}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/signup",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Signin",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"        pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response contains expected fields\", function () {",
+							"    ",
+							"    pm.expect(response.data).to.have.property(\"userId\");",
+							"    pm.expect(response.data).to.have.property(\"photoFilename\");",
+							"    pm.expect(response.data).to.have.property(\"distanceUnits\");",
+							"    pm.expect(response.data).to.have.property(\"currency\");",
+							"});",
+							"",
+							"pm.test(\"Property data types are correct\", function () {",
+							"    pm.expect(response.data.userId).to.be.a(\"number\");",
+							"    pm.expect(response.data.photoFilename).to.be.a(\"string\");",
+							"    pm.expect(response.data.distanceUnits).to.be.a(\"string\");",
+							"    pm.expect(response.data.currency).to.be.a(\"string\");",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 700\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(700); ",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"remember\": false\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/signin",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"signin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user profile data",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"        pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/profile",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Profile  changes",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// random photo filename",
+							"pm.collectionVariables.set(\"randomFileName\", `photo_${Math.floor(Math.random() * 1000)}.jpg`);",
+							"",
+							"// first name",
+							"pm.collectionVariables.set(\"randomFirstName\", `FirstName${Math.floor(Math.random() * 1000)}`);",
+							"",
+							"// random last name",
+							"pm.collectionVariables.set(\"randomLastName\", `LastName${Math.floor(Math.random() * 1000)}`);",
+							"",
+							"// random date of birth without minutes",
+							"const randomYear = Math.floor(Math.random() * (2005 - 1980 + 1)) + 1980; // Рік від 1980 до 2005",
+							"const randomMonth = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0'); // Місяць 01-12",
+							"const randomDay = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0'); // День 01-28",
+							"const randomHour = String(Math.floor(Math.random() * 24)).padStart(2, '0'); // Години 00-23",
+							"pm.collectionVariables.set(\"dateBirth\", `${randomYear}-${randomMonth}-${randomDay}T${randomHour}:00:00.000Z`);",
+							"",
+							"// random country",
+							"const countries = [\"USA\", \"Canada\", \"Germany\", \"France\", \"Ukraine\", \"Poland\"];",
+							"const randomCountry = countries[Math.floor(Math.random() * countries.length)];",
+							"pm.collectionVariables.set(\"randomCountry\", randomCountry);",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"        pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response contains data from body\", function () {",
+							"        pm.expect(response.data.userId).to.be.eql(pm.collectionVariables.get(\"userId\"));",
+							"        pm.expect(response.data.photoFilename).to.be.eql(pm.collectionVariables.get(\"randomFileName\"));",
+							"        pm.expect(response.data.name).to.be.eql(pm.collectionVariables.get(\"randomFirstName\"));",
+							"        pm.expect(response.data.lastName).to.be.eql(pm.collectionVariables.get(\"randomLastName\"));",
+							"        pm.expect(response.data.dateBirth).to.be.eql(pm.collectionVariables.get(\"dateBirth\"));",
+							"        pm.expect(response.data.country).to.be.eql(pm.collectionVariables.get(\"randomCountry\"));",
+							"});",
+							"",
+							"pm.test(\"Date of Birth has a valid format\", function () {",
+							"    const isoDateRegex = /^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$/;",
+							"    pm.expect(response.data.dateBirth).to.match(isoDateRegex);",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"userId\": {{userId}},\n  \"photoFilename\": \"{{randomFileName}}\",\n  \"name\": \"{{randomFirstName}}\",\n  \"lastName\": \"{{randomLastName}}\",\n  \"dateBirth\": \"{{dateBirth}}\",\n  \"country\": \"{{randomCountry}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/profile",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change user password",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"function generateNewPassword(minLength = 8, maxLength = 15) {",
+							"    const length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;",
+							"",
+							"    const lowerCaseLetters = 'abcdefghijklmnopqrstuvwxyz';",
+							"    const upperCaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';",
+							"    const digits = '0123456789';",
+							"    const allCharacters = lowerCaseLetters + upperCaseLetters + digits;",
+							"",
+							"    let password = '';",
+							"",
+							"    password += lowerCaseLetters[Math.floor(Math.random() * lowerCaseLetters.length)];",
+							"    password += upperCaseLetters[Math.floor(Math.random() * upperCaseLetters.length)];",
+							"    password += digits[Math.floor(Math.random() * digits.length)];",
+							"",
+							"    for (let i = password.length; i < length; i++) {",
+							"        password += allCharacters[Math.floor(Math.random() * allCharacters.length)];",
+							"    }",
+							"    password = password.split('').sort(() => Math.random() - 0.5).join('');",
+							"    return password;",
+							"}",
+							"const newPassword = generateNewPassword();",
+							"pm.collectionVariables.set('newPassword', newPassword);",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"        pm.response.to.have.status(200);",
+							"});",
+							"",
+							"if (pm.collectionVariables.get(\"newPassword\")){",
+							"        pm.collectionVariables.set('password', pm.collectionVariables.get('newPassword'))",
+							"}; // перезапис паролю для логіну після реєстрації",
+							"",
+							"pm.test(\"User can login after changing password\", function () {",
+							"    pm.sendRequest({",
+							"        url: \"https://qauto2.forstudy.space/auth/signin\",",
+							"        method: 'POST'",
+							"    }, function (err, response) {",
+							"        if(err){",
+							"                 console.log(err)",
+							"        }else",
+							"        {",
+							"        pm.response.to.have.status(200);",
+							"        console.log(\"User can login after changing password\")",
+							"        }",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"User id is the same after changing password\", function () {",
+							"        pm.expect(response.data.userId).to.be.eql(pm.collectionVariables.get(\"userId\"));",
+							"}); // перевірити що userId такий самий як при створені користувача",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"oldPassword\": \"{{password}}\",\n  \"password\": \"{{newPassword}}\",\n  \"repeatPassword\": \"{{newPassword}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/password",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add new car",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();",
+							"pm.collectionVariables.set('carId', response.data.id);",
+							"pm.collectionVariables.set('mileage', response.data.mileage);",
+							"pm.collectionVariables.set('liters', 0);",
+							"pm.collectionVariables.set('totalCost', 0);",
+							"",
+							"const Ajv = require('ajv');",
+							"const ajv = new Ajv();",
+							"const schema = {",
+							"    type: \"object\",",
+							"    required: [\"status\", \"data\"],",
+							"    properties: {",
+							"        status: { type: \"string\" },",
+							"        data: {",
+							"            type: \"object\",",
+							"            required: [\"id\", \"carBrandId\", \"carModelId\", \"initialMileage\", \"updatedMileageAt\", \"carCreatedAt\", \"mileage\", \"brand\", \"model\", \"logo\"],",
+							"            properties: {",
+							"                id: { type: \"integer\" },",
+							"                carBrandId: { type: \"integer\" },",
+							"                carModelId: { type: \"integer\" },",
+							"                initialMileage: { type: \"integer\" },",
+							"                updatedMileageAt: { type: \"string\", format: \"date-time\" },",
+							"                carCreatedAt: { type: \"string\", format: \"date-time\" },",
+							"                mileage: { type: \"integer\" },",
+							"                brand: { type: \"string\" },",
+							"                model: { type: \"string\" },",
+							"                logo: { type: \"string\" }",
+							"            }",
+							"        }",
+							"    }",
+							"};",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"        pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Response include expected keys\", function () {   ",
+							"    pm.expect(response).to.have.keys('data','status');",
+							"});",
+							"",
+							"pm.test(\"Response schema is valid\", function () {",
+							"    const validate = ajv.compile(schema);",
+							"    const valid = validate(pm.response.json());",
+							"    pm.expect(valid).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"updatedMileageAt matches carCreatedAt\", function () {",
+							"    pm.expect(response.updatedMileageAt).to.eql(response.carCreatedAt);",
+							"});",
+							"",
+							"pm.test(\"Car expenses are empty before expense creation\", function () {",
+							"    pm.sendRequest({",
+							"        url: \"https://qauto2.forstudy.space/api/expenses?carId=1&page=1\",",
+							"        method: 'GET'",
+							"    }, function (err, response) {",
+							"        if(err){",
+							"                 console.log(err)",
+							"        }else",
+							"        {",
+							"        const responseData = response.json();",
+							"        pm.expect(responseData).to.have.property(\"data\");",
+							"        pm.expect(responseData.data).to.be.an(\"array\").that.is.empty;",
+							"        console.log(\"Car data is empty before expense creation\");",
+							"        }",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"carBrandId\": 1,\n  \"carModelId\": 1,\n  \"mileage\": 122\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/cars",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"cars"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Creates an expense",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set('mileage', pm.collectionVariables.get('mileage')+1);",
+							"pm.collectionVariables.set('reportedAt', new Date().toISOString());",
+							"pm.collectionVariables.set('liters', pm.collectionVariables.get('liters')+1);",
+							"pm.collectionVariables.set('totalCost', pm.collectionVariables.get('totalCost')+10);",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"        pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"carId\": {{carId}},\n  \"reportedAt\": \"{{reportedAt}}\",\n  \"mileage\": {{mileage}},\n  \"liters\": {{liters}},\n  \"totalCost\": {{totalCost}},\n  \"forceMileage\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/expenses",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"expenses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get expenses",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"        pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/expenses?carId={{carId}}&page=1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"expenses"
+					],
+					"query": [
+						{
+							"key": "carId",
+							"value": "{{carId}}"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete user account",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"        pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"User data is deleted\", function () {",
+							"    pm.sendRequest({",
+							"        url: \"https://qauto2.forstudy.space/api/users/profile\",",
+							"        method: 'GET'",
+							"    }, function (err, res) {",
+							"        if(err){",
+							"                 console.log(\"error\")",
+							"        }else",
+							"        {",
+							"        pm.expect(res).to.have.status(401);",
+							"        console.log(\"User data is deleted\");",
+							"        }",
+							"    });",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"        pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Status code is ok\", function () {",
+							"        const response = pm.response.json();",
+							"        const result = response.status === \"ok\";",
+							"        pm.expect(result).to.be.true;",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/logout",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://qauto2.forstudy.space/api",
+			"type": "string"
+		},
+		{
+			"key": "firstName",
+			"value": ""
+		},
+		{
+			"key": "lastName",
+			"value": ""
+		},
+		{
+			"key": "email",
+			"value": ""
+		},
+		{
+			"key": "shortPassword",
+			"value": ""
+		},
+		{
+			"key": "longPassword",
+			"value": ""
+		},
+		{
+			"key": "withoutlettersPassword",
+			"value": ""
+		},
+		{
+			"key": "withoutNumbersPassword",
+			"value": ""
+		},
+		{
+			"key": "withoutUppCasegPassword",
+			"value": ""
+		},
+		{
+			"key": "withoutloverCasePassword",
+			"value": ""
+		},
+		{
+			"key": "password",
+			"value": ""
+		},
+		{
+			"key": "userId",
+			"value": ""
+		},
+		{
+			"key": "newPassword",
+			"value": ""
+		},
+		{
+			"key": "carId",
+			"value": ""
+		},
+		{
+			"key": "mileage",
+			"value": ""
+		},
+		{
+			"key": "liters",
+			"value": ""
+		},
+		{
+			"key": "totalCost",
+			"value": ""
+		},
+		{
+			"key": "reportedAt",
+			"value": ""
+		},
+		{
+			"key": "{{$randomFileName}}",
+			"value": ""
+		},
+		{
+			"key": "randomFileName",
+			"value": ""
+		},
+		{
+			"key": "randomFirstName",
+			"value": ""
+		},
+		{
+			"key": "randomLastName",
+			"value": ""
+		},
+		{
+			"key": "isoTimestamp",
+			"value": ""
+		},
+		{
+			"key": "randomCountry",
+			"value": ""
+		},
+		{
+			"key": "dateBirth",
+			"value": ""
+		},
+		{
+			"key": "Authorization",
+			"value": "",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"key": "username",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "countRequest",
+			"value": ""
+		},
+		{
+			"key": "testPasswords",
+			"value": ""
+		},
+		{
+			"key": "testPassword",
+			"value": ""
+		},
+		{
+			"key": "testRunning",
+			"value": ""
+		},
+		{
+			"key": "desc",
+			"value": ""
+		}
+	]
+}
